@@ -12,6 +12,8 @@ class Config:
     MAIL_USE_SSL = True
     MAIL_USERNAME = 'george_yjy@163.com'
     MAIL_PASSWORD = 'showover72'
+    MAIL_SUBJECT_PREFIX = '[THE BLOG]'
+    MAIL_SENDER = 'BlogAdmin <george_yjy@163.com>'
 
     @staticmethod
     def init_app(app):
