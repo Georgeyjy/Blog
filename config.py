@@ -10,8 +10,8 @@ class Config:
     MAIL_SERVER = 'smtp.163.com'
     MAIL_PORT = 587
     MAIL_USE_SSL = True
-    MAIL_USERNAME = 'george_yjy@163.com'
-    MAIL_PASSWORD = 'showover72'
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_SUBJECT_PREFIX = '[THE BLOG]'
     MAIL_SENDER = 'BlogAdmin <george_yjy@163.com>'
 

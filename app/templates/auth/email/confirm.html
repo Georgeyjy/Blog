@@ -2,5 +2,5 @@
 
 <p>感谢您的注册！</p>
 
-<p>请点此链接确认您的邮箱地址：</p>
-{{ url_for('auth.confirm', token=token, _external=True) }}
+<p>请<a href="{{ url_for('auth.confirm', token=token, _external=True) }}">点此</a>确认您的邮箱地址</p>
+<p>若点击链接无效，请复制以下链接到地址栏进行确认：<br>{{ url_for('auth.confirm', token=token, _external=True) }}</p>

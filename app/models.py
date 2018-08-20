@@ -1,4 +1,4 @@
-from flask import current_app, flash
+from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -21,7 +21,10 @@ class User(UserMixin, db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
-
+    
+    def __init__(self, **kwargs):
+        super(User, self).__init__(**kwargs)
+    
     # 实现密码散列
     @property
     def password(self):
@@ -39,7 +42,7 @@ class User(UserMixin, db.Model):
         return s.dumps({'confirm': self.id})
 
     def confirm(self, token):
-        s = Serializer(current_app['SECRET_KEY'])
+        s = Serializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token)
         except:
@@ -49,6 +52,24 @@ class User(UserMixin, db.Model):
         self.confirmed = True
         db.session.add(self)
         db.session.commit()
+        return True
+
+    def generate_reset_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'reset': self.id})
+
+    @staticmethod
+    def reset_password(token, new_password):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        user = User.query.filter_by(id=data.get('reset')).first()
+        if not user:
+            return False
+        user.password = new_password
+        db.session.add(user)
         return True
 
 
